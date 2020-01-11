@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using Paperland.View;
 using Paperland.Controller;
+using Paperland.Input;
 
 public class ContextInstaller : MonoInstaller
 {
@@ -10,12 +11,12 @@ public class ContextInstaller : MonoInstaller
     public override void InstallBindings()
     {
         // Les Views
-        Container.Bind<IBoardMapView>().To<MapView>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<IBoardMapView>().To<BoardMapView>().FromComponentInHierarchy().AsSingle();
 
         //Les controller
         Container.Bind<InputController>().FromComponentInHierarchy().AsSingle().NonLazy();
-        Container.Bind<BoardMap>().FromComponentInHierarchy().AsSingle().NonLazy();
-        Container.Bind<ZoneController>().FromComponentInHierarchy().AsSingle().NonLazy();
+        Container.Bind<BoardMapController>().AsTransient();
+        Container.Bind<ZoneController>().AsTransient();
 
 
         // Les factories
