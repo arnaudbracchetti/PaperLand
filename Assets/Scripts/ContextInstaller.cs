@@ -21,5 +21,10 @@ public class ContextInstaller : MonoInstaller
 
         // Les factories
         Container.BindFactory<ZoneView, ZoneFactory>().FromComponentInNewPrefab(_zonePrefab);
+
+
+        Container.BindInterfacesAndSelfTo<GameManager>().FromComponentInHierarchy().AsSingle();
+
+        Container.Bind<CreateZoneTool>().FromComponentInHierarchy().AsTransient();
     }
 }

@@ -65,7 +65,7 @@ namespace Paperland.View
 
             if (_dragMap)
             {
-                ScrollMap(e.GetWorldPositionDelta());
+               // ScrollMap(e.GetWorldPositionDelta());
             }
         }
 
