@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using Paperland.View;
 using Zenject;
 
-namespace Paperland.Controller
+namespace Paperland.Input
 {
     public class InputController : MonoBehaviour
     {
