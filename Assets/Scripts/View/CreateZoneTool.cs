@@ -24,9 +24,9 @@ public class CreateZoneTool : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _zoneCreator.CreateZone(eventData.pointerCurrentRaycast.worldPosition);
+        _zoneCreator.CreateZone(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         
 
-        Debug.Log(eventData.pointerCurrentRaycast.worldPosition.ToString());
+        Debug.Log(eventData.pointerCurrentRaycast.ToString());
     }
 }

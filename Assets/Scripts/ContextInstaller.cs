@@ -2,7 +2,7 @@ using UnityEngine;
 using Zenject;
 using Paperland.View;
 using Paperland.Controller;
-using Paperland.Input;
+using Paperland.Inputs;
 
 public class ContextInstaller : MonoInstaller
 {

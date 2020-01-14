@@ -1,5 +1,5 @@
 ﻿using Paperland.Controller;
-using Paperland.Input;
+using Paperland.Inputs;
 using UnityEngine;
 using Zenject;
 
