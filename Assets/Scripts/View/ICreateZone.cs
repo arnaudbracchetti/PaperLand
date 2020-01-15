@@ -6,6 +6,6 @@ namespace Paperland.View
     public interface ICreateZone
     {
 
-        ZoneView CreateZone(Vector2 pos);
+        ZoneView CreateZone(Vector3 pos);
     }
 }

@@ -13,9 +13,11 @@ public class GameManager : MonoBehaviour, ICreateZone
         _zoneFactory = zf;
     }
 
-    public ZoneView CreateZone(Vector2 pos)
+    public ZoneView CreateZone(Vector3 pos)
     {
         ZoneView aZone = _zoneFactory.Create();
+
+        pos.z = 0;
         aZone.SetCenterPosition(pos);
         aZone.IsSelected = true;
         //_zones.Add(aZone);
