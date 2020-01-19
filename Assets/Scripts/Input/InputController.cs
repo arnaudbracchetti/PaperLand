@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Paperland.View;
 using Zenject;
+using System.Diagnostics.Contracts;
 
 namespace Paperland.Inputs
 {
@@ -12,15 +13,15 @@ namespace Paperland.Inputs
     {
         [Inject] IBoardMapView _mapView;
 
-        private MouseInfo _data = new MouseInfo(Vector2.zero, false);
+        private MouseInfoEventArgs _data = new MouseInfoEventArgs(Vector2.zero, false);
 
 
-        public event EventHandler<MouseInfo> EventDrag;
-        public event EventHandler<MouseInfo> EventMove;
-        public event EventHandler<MouseInfo> EventLeftClickUp;
-        public event EventHandler<MouseInfo> EventLeftClickDown;
-        public event EventHandler<MouseInfo> EventZoomIn;
-        public event EventHandler<MouseInfo> EventZoomOut;
+        public event EventHandler<MouseInfoEventArgs> EventDrag;
+        public event EventHandler<MouseInfoEventArgs> EventMove;
+        public event EventHandler<MouseInfoEventArgs> EventLeftClickUp;
+        public event EventHandler<MouseInfoEventArgs> EventLeftClickDown;
+        public event EventHandler<MouseInfoEventArgs> EventZoomIn;
+        public event EventHandler<MouseInfoEventArgs> EventZoomOut;
 
 
         public void OnMouseClickUp(InputAction.CallbackContext context)
@@ -29,7 +30,7 @@ namespace Paperland.Inputs
             {
 
                 _data.clicked = false;
-                EventLeftClickUp?.Invoke(this, new MouseInfo(_data));
+                EventLeftClickUp?.Invoke(this, new MouseInfoEventArgs(_data));
 
 
             }
@@ -41,7 +42,7 @@ namespace Paperland.Inputs
             {
 
                 _data.clicked = true;
-                EventLeftClickDown?.Invoke(this, new MouseInfo(_data));
+                EventLeftClickDown?.Invoke(this, new MouseInfoEventArgs(_data));
 
             }
 
@@ -55,11 +56,11 @@ namespace Paperland.Inputs
 
                 if (_data.clicked)
                 {
-                    EventDrag?.Invoke(this, new MouseInfo(_data));
+                    EventDrag?.Invoke(this, new MouseInfoEventArgs(_data));
 
                 }
 
-                EventMove?.Invoke(this, new MouseInfo(_data));
+                EventMove?.Invoke(this, new MouseInfoEventArgs(_data));
 
             }
 
@@ -70,15 +71,15 @@ namespace Paperland.Inputs
             if (context.performed)
             {
                 if (context.ReadValue<float>() > 0)
-                    EventZoomIn?.Invoke(this, new MouseInfo(_data));
+                    EventZoomIn?.Invoke(this, new MouseInfoEventArgs(_data));
                 else
-                    EventZoomOut?.Invoke(this, new MouseInfo(_data));
+                    EventZoomOut?.Invoke(this, new MouseInfoEventArgs(_data));
 
             }
         }
     }
 
-    public class MouseInfo : EventArgs
+    public class MouseInfoEventArgs : EventArgs
     {
 
         public bool clicked;
@@ -88,15 +89,18 @@ namespace Paperland.Inputs
         private Vector2 _worldPositionCach = Vector2.zero;
         private bool _cachIsDirty = true;
 
-        public MouseInfo(Vector2 screenPos, bool clicked)
+        public MouseInfoEventArgs(Vector2 screenPos, bool clicked)
         {
             SetScreenPosition(screenPos);
             _oldScreenPostion = _screenPostion;
             this.clicked = clicked;
         }
 
-        public MouseInfo(MouseInfo m)
-        {
+        public MouseInfoEventArgs(MouseInfoEventArgs m)
+        { 
+
+           Contract.Requires(m != null);
+
             clicked = m.clicked;
             _screenPostion = new Vector2(m._screenPostion.x, m._screenPostion.y);
             _oldScreenPostion = m._oldScreenPostion;

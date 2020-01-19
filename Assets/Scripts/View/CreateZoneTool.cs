@@ -1,11 +1,12 @@
 ﻿using Paperland.View;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-public class CreateZoneTool : MonoBehaviour, IBeginDragHandler, IDragHandler, IPointerEnterHandler, IInitializePotentialDragHandler
+public class CreateZoneTool : MonoBehaviour, IInitializePotentialDragHandler, IDragHandler
 {
     private float threshold = 9; //carré du nombre de pixels déclanchant la création d'un élément
     private ICreateZone _zoneCreator;
@@ -17,27 +18,24 @@ public class CreateZoneTool : MonoBehaviour, IBeginDragHandler, IDragHandler, IP
     }
    
 
-    public void OnDrag(PointerEventData eventData)
-    {
-       
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        Debug.Log("DRAG");
-    }
 
 
     public void OnInitializePotentialDrag(PointerEventData eventData)
     {
+        Contract.Requires(eventData != null);
+
+
         ZoneView newZone = _zoneCreator.CreateZone(eventData.pointerCurrentRaycast.worldPosition);
 
         eventData.pointerDrag = newZone.gameObject;
-        Debug.Log(eventData);
+      
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+   
+
+
+    public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("ENTER");
+        // doit être présent pour que OnInitializePotentialDrag soit appelée
     }
 }

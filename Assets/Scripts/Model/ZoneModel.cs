@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Paperland.Model
 {
@@ -16,6 +17,9 @@ namespace Paperland.Model
 
         public void AddAccecibleZone(ZoneModel aZone)
         {
+
+            Contract.Requires(aZone != null);
+
             if (!_accecibleZones.Contains(aZone))
             {
                 _accecibleZones.Add(aZone);
@@ -25,6 +29,8 @@ namespace Paperland.Model
 
         public void RemoveAccecibleZone(ZoneModel aZone)
         {
+            Contract.Requires(aZone != null);
+
             _accecibleZones.Remove(aZone);
             aZone._accecibleZones.Remove(this);
         }

@@ -1,5 +1,6 @@
 ﻿
 
+using System.Diagnostics.Contracts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -23,6 +24,9 @@ namespace Paperland.View
   
         public void OnDrag(PointerEventData eventData)
         {
+
+            Contract.Requires(eventData != null);
+
             if (_isDrag)
             {
 
