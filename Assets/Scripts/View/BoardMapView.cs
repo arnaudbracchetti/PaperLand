@@ -22,7 +22,7 @@ namespace Paperland.View
 
 
 
-    public class BoardMapView : MonoBehaviour, IBoardMapView, IDragHandler, IInitializePotentialDragHandler
+    public class BoardMapView : MonoBehaviour, IBoardMapView, IDragHandler, IInitializePotentialDragHandler, IScrollHandler
     {
         #region attributs
         [SerializeField] private float _zoomSpeed;
@@ -135,7 +135,10 @@ namespace Paperland.View
 
         public void ZoomMap(float factor)
         {
-            Camera.main.transform.Translate(Vector3.forward * factor * Camera.main.transform.position.z);
+            if ((factor< 0 && Camera.main.transform.position.z < -1) || (factor >0 && Camera.main.transform.position.z > -30))
+            {
+                Camera.main.transform.Translate(Vector3.forward * factor * Camera.main.transform.position.z);
+            }
         }
 
         public ItemView GetItemUnderPoint(Vector2 point)
@@ -146,6 +149,19 @@ namespace Paperland.View
         public void OnInitializePotentialDrag(PointerEventData eventData)
         {
             _dragOrigin = eventData.pressEventCamera.transform.position;
+        }
+
+        public void OnScroll(PointerEventData eventData)
+        {
+            Debug.Log(eventData.scrollDelta );
+             if (eventData.scrollDelta == Vector2.up)
+             {
+                 ZoomMap(0.1f);
+             }
+             else
+            {
+                ZoomMap(-0.1f);
+            }
         }
     }
 }
