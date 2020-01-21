@@ -19,9 +19,7 @@ public class GameManager : MonoBehaviour, ICreateZone
 
         pos.z = 0;
         aZone.SetCenterPosition(pos);
-        aZone.IsSelected = true;
-        //_zones.Add(aZone);
-
+        
         return aZone;
     }
 

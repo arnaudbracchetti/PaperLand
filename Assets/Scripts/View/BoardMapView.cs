@@ -10,121 +10,61 @@ using Zenject;
 
 namespace Paperland.View
 {
-    public interface IBoardMapView
-    {
-
-        void ScrollMap(Vector2 move);
-        void ZoomMap(float factor);
-        ItemView GetItemUnderPoint(Vector2 point);
-
-
-    }
+    
 
 
 
-    public class BoardMapView : MonoBehaviour, IBoardMapView, IDragHandler, IInitializePotentialDragHandler, IScrollHandler
+    public class BoardMapView : MonoBehaviour, IDragHandler, IInitializePotentialDragHandler, IScrollHandler
     {
         #region attributs
         [SerializeField] private float _zoomSpeed;
 
-        private InputController _input;
-        private BoardMapController _controller;
 
-        private bool _dragMap = false;
-        private Vector3 _dragOrigin, _nextCamPos;
+
+
+
+        private Vector3 _camPosOrigin;
         #endregion
 
-        #region Construction
+       
 
-        [Inject]
-        private void Constructor(InputController anInput, BoardMapController aController)
+        public void OnInitializePotentialDrag(PointerEventData eventData)
         {
-            _input = anInput;
-            _controller = aController;
-
-            /*
-                        _input.EventDrag += OnMouseDrag;
-                        _input.EventLeftClickDown += OnMouseClickDown;
-                        _input.EventZoomIn += OnZoomIn;
-                        _input.EventZoomOut += OnZoomOut;*/
-        }
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-
-        }
-
-        #endregion
-
-        Vector2 pos, pos2;
-
-        // Update is called once per frame
-        private void LateUpdate()
-        {
-           
-            
+            _camPosOrigin = eventData.pressEventCamera.transform.position;
         }
 
 
 
         public void OnDrag(PointerEventData eventData)
         {
-           // Contract.Requires(eventData != null);
+            Contract.Requires(eventData != null);
 
+            Vector3 pos = eventData.position;
+            Vector3 posOrigin = eventData.pressPosition;
+            pos.z = -eventData.pressEventCamera.transform.position.z;
+            posOrigin.z = -eventData.pressEventCamera.transform.position.z;
 
+            pos = eventData.pressEventCamera.ScreenToWorldPoint(pos);
+            posOrigin = eventData.pressEventCamera.ScreenToWorldPoint(posOrigin);
 
-            /*Vector3 pos = eventData.position;
-            pos.z = -Camera.main.transform.position.z;
-            pos = Camera.main.ScreenToWorldPoint(pos);
-            pos.z = -Camera.main.transform.position.z;*/
-            pos = eventData.position;
-            pos2 = eventData.pressPosition;
+            Camera.main.transform.position = _camPosOrigin - (pos - posOrigin);
 
-           
-
-            Vector3 wpos = eventData.pressEventCamera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, -Camera.main.transform.position.z));//Camera.main.ScreenToWorldPoint(new Vector3(pos.x, pos.y, -Camera.main.transform.position.z));
-            Vector3 wpos2 = eventData.pressEventCamera.ScreenToWorldPoint(new Vector3(pos2.x, pos2.y, -Camera.main.transform.position.z));//Camera.main.ScreenToWorldPoint(new Vector3(pos2.x, pos2.y, -Camera.main.transform.position.z));
-            Vector3 newPos = (wpos - wpos2);
-            //newPos.z = Camera.main.transform.position.z;
-
-
-            Camera.main.transform.position = _dragOrigin - newPos;
-            _nextCamPos = -(pos - pos2);
-            //ScrollMap(Camera.main.ScreenToWorldPoint(new Vector3(eventData.delta.x, eventData.delta.y, -Camera.main.transform.position.z)));
-        }
-        /*
-        private void OnMouseDrag(object o, MouseInfoEventArgs e)
-        {
-
-            if (_dragMap)
-            {
-               // ScrollMap(e.GetWorldPositionDelta());
-            }
         }
 
-        private void OnMouseClickDown(object o, MouseInfoEventArgs e)
+        public void OnScroll(PointerEventData eventData)
         {
-            if (GetItemUnderPoint(e.GetWorldPosition()) == null)
+            Debug.Log(eventData.scrollDelta);
+            if (eventData.scrollDelta == Vector2.up)
             {
-                _dragMap = true;
+                ZoomMap(_zoomSpeed);
             }
             else
             {
-                _dragMap = false;
+                ZoomMap(-_zoomSpeed);
             }
         }
-        */
-        private void OnZoomIn(object o, MouseInfoEventArgs e)
-        {
-            ZoomMap(_zoomSpeed);
-        }
 
-        private void OnZoomOut(object o, MouseInfoEventArgs e)
-        {
-            ZoomMap(-_zoomSpeed);
-        }
-
+       
 
 
 
@@ -135,33 +75,13 @@ namespace Paperland.View
 
         public void ZoomMap(float factor)
         {
-            if ((factor< 0 && Camera.main.transform.position.z < -1) || (factor >0 && Camera.main.transform.position.z > -30))
+            if ((factor < 0 && Camera.main.transform.position.z < -1) || (factor > 0 && Camera.main.transform.position.z > -30))
             {
                 Camera.main.transform.Translate(Vector3.forward * factor * Camera.main.transform.position.z);
             }
         }
 
-        public ItemView GetItemUnderPoint(Vector2 point)
-        {
-            return null;
-        }
 
-        public void OnInitializePotentialDrag(PointerEventData eventData)
-        {
-            _dragOrigin = eventData.pressEventCamera.transform.position;
-        }
 
-        public void OnScroll(PointerEventData eventData)
-        {
-            Debug.Log(eventData.scrollDelta );
-             if (eventData.scrollDelta == Vector2.up)
-             {
-                 ZoomMap(0.1f);
-             }
-             else
-            {
-                ZoomMap(-0.1f);
-            }
-        }
     }
 }

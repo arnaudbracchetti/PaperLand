@@ -11,7 +11,7 @@ namespace Paperland.Inputs
 {
     public class InputController : MonoBehaviour
     {
-        [Inject] IBoardMapView _mapView;
+        
 
         private MouseInfoEventArgs _data = new MouseInfoEventArgs(Vector2.zero, false);
 

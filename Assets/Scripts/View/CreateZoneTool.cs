@@ -8,11 +8,11 @@ using Zenject;
 
 public class CreateZoneTool : MonoBehaviour, IInitializePotentialDragHandler, IDragHandler
 {
-    private float threshold = 9; //carré du nombre de pixels déclanchant la création d'un élément
+    
     private ICreateZone _zoneCreator;
     
     [Inject]
-    void constructor(ICreateZone cz)
+    void Constructor(ICreateZone cz)
     {
         _zoneCreator = cz;
     }

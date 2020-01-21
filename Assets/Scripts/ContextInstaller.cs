@@ -3,6 +3,7 @@ using Zenject;
 using Paperland.View;
 using Paperland.Controller;
 using Paperland.Inputs;
+using Paperland.Model;
 
 public class ContextInstaller : MonoInstaller
 {
@@ -11,7 +12,7 @@ public class ContextInstaller : MonoInstaller
     public override void InstallBindings()
     {
         // Les Views
-        Container.Bind<IBoardMapView>().To<BoardMapView>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<BoardMapView>().To<BoardMapView>().FromComponentInHierarchy().AsSingle();
 
         //Les controller
         Container.Bind<InputController>().FromComponentInHierarchy().AsSingle().NonLazy();
@@ -26,5 +27,10 @@ public class ContextInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<GameManager>().FromComponentInHierarchy().AsSingle();
 
         Container.Bind<CreateZoneTool>().FromComponentInHierarchy().AsTransient();
+
+        // les Zones
+        Container.Bind<ZoneManager>().AsSingle();
+        Container.Bind<ZoneModel>().FromFactory<ZoneModel.CustomZoneFactory>();
+        //Container.BindFactory<ZoneModel, ZoneModel.ZoneFactory>().FromFactory<ZoneModel.CustomZoneFactory>();
     }
 }
